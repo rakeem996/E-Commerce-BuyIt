@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "mongoose": "^7.2.3",
+    "nodemon": "^2.0.22"
+  },
+  "name": "e-commerce-website",
+  "version": "1.0.0",
+  "main": "backend/server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node backend/server.js",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rakeem996/E-Commerce-BuyIt.git"
+  },
+  "author": "rakeem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rakeem996/E-Commerce-BuyIt/issues"
+  },
+  "homepage": "https://github.com/rakeem996/E-Commerce-BuyIt#readme",
+  "description": ""
+}
