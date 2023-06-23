@@ -98,13 +98,12 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(productId);
 
   const isReviewed = product.reviews.find(
-    (rev) => rev.user.toString() === req.body._id.toString()
+    (rev) => String(rev.user) === String(req.user._id)
   );
 
-
   if (isReviewed) {
-    product.review.forEach((rev) => {
-      if (rev.user.toString() === req.body._id.toString()) {
+    product.reviews.forEach((rev) => {
+      if (String(rev.user) === String(req.user._id)) {
         (rev.rating = rating), (rev.comment = comment);
       }
     });
@@ -131,13 +130,14 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
 
 //Get All product Reviews
 
-exports.getProductReviews = catchAsyncErrors(async (req, res, next) => {
-  
+exports.getProductReviews = catchAsyncErrors( async(req, res, next) => {
+  console.log(req.query.id)
   const product = await Product.findById(req.query.id);
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
+
 
   res.status(200).json({
     success: true,
@@ -153,8 +153,10 @@ exports.deleteProductReviews = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Product not found", 404));
   }
 
+  // console.log(product)
+
   const reviews = product.reviews.filter(
-    (rev) => rev._id.toString() !== req.query.id.toString()
+    (rev) => String(rev._id) !== String(req.query.id)
   );
 
   let avg = 0;
@@ -163,23 +165,29 @@ exports.deleteProductReviews = catchAsyncErrors(async (req, res, next) => {
     avg += rev.rating;
   });
 
-  const ratings = avg / product.reviews.length;
+  const ratings = avg / reviews.length;
 
   const numsOfReviews = reviews.length;
 
-  await product.findByIdAndUpdate(
-    req.query.productId,
-    {
-      reviews,
-      ratings,
-      numsOfReviews,
-    },
-    {
-      new: true,
-      runValidators: true,
-      userFindAndModify: false,
-    }
-  );
+  // await Product.findByIdAndUpdate(
+  //   req.query.productId,
+  //   {
+  //     reviews,
+  //     ratings,
+  //     numsOfReviews,                    
+  //   },
+  //   {
+  //     new: true,
+  //     runValidators: true,
+  //     userFindAndModify: false,
+  //   }
+  // );
+
+  product.rating = ratings;
+  product.numsOfReviews = numsOfReviews;
+  product.reviews = reviews;
+
+  await product.save({validateBeforeSave: false});
 
   res.status(200).json({
     success: true,
