@@ -37,6 +37,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 exports.updateProducts = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
 
+
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
@@ -56,6 +57,7 @@ exports.updateProducts = catchAsyncErrors(async (req, res, next) => {
 //delete Product --Admin
 exports.deleteProducts = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
+
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
